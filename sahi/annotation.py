@@ -508,6 +508,8 @@ class ObjectAnnotation:
                 Size of the full image after shifting, should be in
                 the form of [height, width]
         """
+        if not hasattr(self, 'mask'):
+            self.mask = None
         if not isinstance(category_id, int):
             raise ValueError("category_id must be an integer")
         if (bbox is None) and (segmentation is None):
@@ -523,9 +525,13 @@ class ObjectAnnotation:
             if bbox_from_segmentation is not None:
                 bbox = bbox_from_segmentation
             else:
-                raise ValueError("Invalid segmentation mask.")
+                self.mask = None  # raise ValueError("Invalid segmentation mask.")
         else:
             self.mask = None
+
+        # New: Check if bbox is None after attempting to use segmentation
+        if bbox is None:
+            raise ValueError("bbox is required when segmentation is invalid or not provided")
 
         # if bbox is a numpy object, convert it to python List[float]
         if type(bbox).__module__ == "numpy":
