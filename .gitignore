@@ -169,3 +169,5 @@ tests/data
 
 .archive
 .python-version
+
+.github/workflows/
